@@ -1,0 +1,17 @@
+# CS8.401 — Cryptographic Primitives Project
+# Python 3.10+ required
+#
+# The core implementations (PA#1–PA#20) have NO third-party dependencies.
+# Only the standard library is used:
+#   - os.urandom     (randomness)
+#   - struct         (binary packing in MD padding)
+#   - math           (NIST statistical tests)
+#   - time           (benchmarking)
+#   - threading      (API shutdown)
+#   - signal         (API shutdown)
+#
+# The packages below are only needed to run the optional web API (PA#0).
+
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+pydantic>=2.0.0
