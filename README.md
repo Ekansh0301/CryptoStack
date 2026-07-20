@@ -1,436 +1,312 @@
-# CS8.401 — Cryptographic Primitives Project
+# CryptoStack
 
-End-to-end implementation of 20 Programming Assignments covering the full cryptographic primitive stack — from One-Way Functions to 2-party MPC — plus a FastAPI backend and an interactive React dashboard for "learning-by-breaking" security simulations.
+![Core](https://img.shields.io/badge/Core-Standard_Library_Only-3b82f6?style=flat-square) ![Cryptography](https://img.shields.io/badge/Cryptography-MPC_%7C_OT_%7C_PKC-ef4444?style=flat-square) ![Tests](https://img.shields.io/badge/Tests-NIST_Validated-10b981?style=flat-square) ![Backend](https://img.shields.io/badge/Backend-FastAPI_REST-009688?style=flat-square) ![Frontend](https://img.shields.io/badge/Frontend-React_18-61dafb?style=flat-square)
 
----
+A full-stack cryptographic engine and interactive educational dashboard. This project features the end-to-end implementation of 20 cryptographic primitives built entirely from first principles, scaling from foundational One-Way Functions up to 2-party Multi-Party Computation (MPC).
 
-## Repository Structure
+Coupled with a FastAPI backend and a custom React dashboard, this project provides a "learning-by-breaking" environment to simulate cryptographic attacks, visualize secure protocols in real-time, and trace full bidirectional reductions.
 
-```
-cs8401/
-├── src/
-│   ├── pa01_owf_prg/          owf_prg.py          — OWF + PRG (HILL) + NIST tests
-│   ├── pa02_prf/              prf.py              — PRF (GGM tree) + AES-128 from scratch
-│   ├── pa03_cpa/              cpa.py              — CPA-secure encryption
-│   ├── pa04_modes/            modes.py            — ECB, CBC, OFB, CTR modes
-│   ├── pa05_mac/              mac.py              — PRF-MAC, CBC-MAC, HMAC stub
-│   ├── pa06_cca/              cca.py              — Encrypt-then-MAC (CCA-secure)
-│   ├── pa07_merkle_damgard/   merkle_damgard.py   — Merkle-Damgård framework
-│   ├── pa08_dlp_crhf/         dlp_crhf.py         — DLP-based CRHF
-│   ├── pa09_birthday/         birthday.py         — Birthday attack
-│   ├── pa10_hmac/             hmac_impl.py        — HMAC + Encrypt-then-HMAC
-│   ├── pa11_dh/               dh.py               — Diffie-Hellman key exchange
-│   ├── pa12_rsa/              rsa.py              — RSA + PKCS#1 v1.5
-│   ├── pa13_miller_rabin/     miller_rabin.py     — Miller-Rabin + prime generation
-│   ├── pa14_crt/              crt.py              — CRT + Håstad broadcast attack
-│   ├── pa15_signatures/       signatures.py       — RSA digital signatures
-│   ├── pa16_elgamal/          elgamal.py          — ElGamal PKE
-│   ├── pa17_cca_pkc/          cca_pkc.py          — CCA-secure PKC (ElGamal + RSA sig)
-│   ├── pa18_ot/               ot.py               — 1-out-of-2 Oblivious Transfer
-│   ├── pa19_secure_and/       secure_and.py       — Secure AND / XOR / NOT gates
-│   └── pa20_mpc/              mpc.py              — 2-party MPC circuits (comparison, equality, addition)
-├── tests/
-│   └── test_all.py            — Comprehensive test suite (all PAs)
-├── backend/
-│   └── api.py                 — FastAPI v2.0.0 backend (50+ HTTP endpoints)
-├── webapp/
-│   ├── src/
-│   │   ├── App.jsx            — Main React app (sidebar navigation, page routing)
-│   │   ├── api.js             — API client + PA metadata registry
-│   │   ├── index.css          — Full design system
-│   │   ├── main.jsx           — Entry point
-│   │   └── pages/
-│   │       ├── PA01_06.jsx    — Foundations + Symmetric crypto pages
-│   │       ├── PA07_12.jsx    — Hash + Public Key pages
-│   │       └── PA13_20.jsx    — Primality, Signatures, PKC + MPC pages
-│   ├── dist/                  — Production build output
-│   ├── index.html
-│   ├── package.json           — React 18 + Vite 5
-│   └── vite.config.js
-└── requirements.txt           — FastAPI, uvicorn, pydantic
-```
+## 🚀 Core Features
+
+* **Built from Scratch:** All 20 cryptographic primitives are implemented using **only the Python standard library**. The only permitted exceptions are: (1) `int` for arbitrary precision, (2) `os.urandom` for secure randomness, and (3) `pow(a, b, n)` for modular exponentiation.
+* **"Learning-by-Breaking" Simulations:** Interactive API endpoints designed to demonstrate exactly why insecure primitives fail, including ECB determinism, CPA nonce reuse, MAC tampering, and DH MITM attacks.
+* **Interactive UI Dashboard:** A complete React 18 frontend providing visual representations of Merkle-Damgård chains, Hash outputs, Diffie-Hellman Key Exchanges, and MPC circuits.
+* **RESTful API Backend:** A heavily optimized FastAPI backend exposing 50+ endpoints. It utilizes lazy-loaded singletons to cache expensive computational objects (AES PRF, DH groups, RSA keypairs) for instant response times.
 
 ---
 
-## Setup
+## 📚 The Cryptographic Stack
 
-**Requirements:** Python 3.10+, Node 18+ (only for the webapp).
+The core engine is broken down into 20 distinct modules, structured into five progressive phases.
+
+### Phase 0: Number Theory Foundations
+
+| Module | Topic | Description |
+| --- | --- | --- |
+| `pa13` | **Miller-Rabin** | Primality testing and secure prime generation (foundation for all PAs) |
+
+### Phase 1: Symmetric Cryptography
+
+| Module | Topic | Description |
+| --- | --- | --- |
+| `pa01` | **OWF & PRG** | One-Way Functions, HILL construction, and NIST tests |
+| `pa02` | **PRF** | GGM binary tree PRF and AES-128 built from scratch |
+| `pa03` | **CPA** | IND-CPA secure encryption implementation |
+| `pa04` | **Modes** | ECB, CBC, OFB, and CTR block cipher modes |
+| `pa05` | **MAC** | PRF-MAC, CBC-MAC, and HMAC implementations |
+| `pa06` | **CCA** | Encrypt-then-MAC (CCA-secure) construction |
+
+### Phase 2: Hashing & Hash-Based Constructions
+
+| Module | Topic | Description |
+| --- | --- | --- |
+| `pa07` | **Merkle-Damgård** | Hash framework construction with MD-strengthening padding |
+| `pa08` | **DLP-CRHF** | Discrete Logarithm Problem-based CRHF |
+| `pa09` | **Birthday** | Birthday paradox and collision attacks |
+| `pa10` | **HMAC** | Full HMAC and Encrypt-then-HMAC construction |
+
+### Phase 3: Public-Key Cryptography
+
+| Module | Topic | Description |
+| --- | --- | --- |
+| `pa11` | **Diffie-Hellman** | DH key exchange protocols |
+| `pa12` | **RSA** | RSA encryption with PKCS#1 v1.5 padding |
+| `pa14` | **CRT** | Chinese Remainder Theorem and Håstad's attack |
+| `pa15` | **Signatures** | RSA digital signatures |
+| `pa16` | **ElGamal** | ElGamal Public-Key Encryption (PKE) |
+| `pa17` | **CCA-PKC** | CCA-secure PKC combining ElGamal and RSA signatures |
+
+### Phase 4: Multi-Party Computation
+
+| Module | Topic | Description |
+| --- | --- | --- |
+| `pa18` | **Oblivious Transfer** | 1-out-of-2 OT protocols |
+| `pa19` | **Secure Gates** | Secure AND, XOR, and NOT logic gates |
+| `pa20` | **MPC Circuits** | 2-party MPC circuits (comparison, equality, addition) |
+
+---
+
+## 🛠️ Setup & Installation
+
+**Prerequisites:** Python 3.10+ and Node.js 18+ (Node is only required for the web app frontend).
 
 ```bash
-# Clone
-git clone https://github.com/<your-username>/cs8401.git
-cd cs8401
+# Clone the repository
+git clone https://github.com/ekansh0301/cryptostack.git
+cd cryptostack
 
-# (Optional) virtual environment
-python -m venv .venv
-source .venv/bin/activate      # Windows: .venv\Scripts\activate
-
-# Install API dependencies (only needed for the webapp)
+# Install API dependencies (FastAPI, Uvicorn, Pydantic)
 pip install -r requirements.txt
 
-# Install webapp dependencies
-cd webapp && npm install && cd ..
-```
-
-All cryptographic implementations (PA#1–PA#20) use **only the Python standard library**.
-`requirements.txt` only contains FastAPI/uvicorn/pydantic for the optional web UI.
-
----
-
-## Quick Start
-
-### 1. Run all tests
-
-```bash
-cd cs8401
-python tests/test_all.py
-```
-
-### 2. Run individual PAs
-
-```bash
-# Phase 1 — Number Theory (no dependencies)
-python src/pa13_miller_rabin/miller_rabin.py
-python src/pa07_merkle_damgard/merkle_damgard.py
-
-# Phase 2 — Symmetric Cryptography
-python src/pa01_owf_prg/owf_prg.py
-python src/pa02_prf/prf.py
-python src/pa03_cpa/cpa.py
-python src/pa04_modes/modes.py
-python src/pa05_mac/mac.py
-python src/pa06_cca/cca.py
-
-# Phase 3 — Hashing
-python src/pa08_dlp_crhf/dlp_crhf.py
-python src/pa09_birthday/birthday.py
-python src/pa10_hmac/hmac_impl.py
-
-# Phase 4 — Public-Key Cryptography
-python src/pa11_dh/dh.py
-python src/pa12_rsa/rsa.py
-python src/pa14_crt/crt.py
-python src/pa15_signatures/signatures.py
-python src/pa16_elgamal/elgamal.py
-python src/pa17_cca_pkc/cca_pkc.py
-
-# Phase 5 — Multi-Party Computation
-python src/pa18_ot/ot.py
-python src/pa19_secure_and/secure_and.py
-python src/pa20_mpc/mpc.py
-```
-
-### 3. Start the backend API
-
-```bash
-pip install fastapi uvicorn
-cd cs8401
-uvicorn backend.api:app --reload --port 8000
-```
-
-### 4. Start the React webapp
-
-```bash
-cd cs8401/webapp
+# Install webapp frontend dependencies
+cd webapp
 npm install
+cd ..
+```
+
+---
+
+## 💻 Quick Start
+
+### 1. Run the Test Suite
+
+Execute the comprehensive test suite to validate all 20 cryptographic implementations.
+
+```bash
+python tests/test_all.py
+
+```
+
+### 2. Start the Backend API
+
+Launch the FastAPI server (runs locally on port 8000).
+
+```bash
+python -m uvicorn backend.api:app --reload --port 8000
+```
+
+### 3. Start the React Dashboard
+
+In a new terminal window, spin up the frontend UI.
+
+```bash
+cd webapp
 npm run dev
-# Open http://localhost:5173
+# Open http://localhost:5173 in your browser
+
 ```
 
 ---
 
-## Dependency Graph
+## 🛡️ Interactive Security Simulations ("Learning-by-Breaking")
 
-```
-PA#13 ────────────────────────────────────────────┐
-  ├─▶ PA#7 (Merkle-Damgård)                        │
-  │     └─▶ PA#8 (DLP-CRHF) ──▶ PA#9 (Birthday)   │
-  │           └─▶ PA#10 (HMAC)                      │
-  ├─▶ PA#1 (OWF+PRG) ─▶ PA#2 (PRF) ─▶ PA#3 (CPA)  │
-  │                           ├─▶ PA#4 (Modes)      │
-  │                           ├─▶ PA#5 (MAC) ───────┤
-  │                           │     └─▶ PA#6 (CCA)  │
-  │                           └─▶ PA#10 (HMAC)      │
-  ├─▶ PA#11 (DH) ──▶ PA#16 (ElGamal) ──────────────┤
-  │         └─▶ PA#18 (OT) ──▶ PA#19 (Secure gates) │
-  │               └─▶ PA#20 (MPC circuits)          │
-  └─▶ PA#12 (RSA) ──▶ PA#14 (CRT + Håstad)         │
-              ├─▶ PA#15 (Signatures) ───────────────┤
-              └─▶ PA#17 (CCA-PKC) ◀─ PA#15+PA#16   │
-```
+The API includes several specialized endpoints designed to demonstrate exactly why insecure cryptographic primitives fail in the real world.
+
+| Simulation | Endpoint | Technical Demonstration |
+| --- | --- | --- |
+| **ECB Determinism** | `/pa04/ecb_demo` | Proves that identical plaintext blocks yield identical ciphertext blocks in ECB mode, unlike CBC or CTR. |
+| **CPA Nonce Reuse** | `/pa03/cpa_challenge` | Shows how an attacker can distinguish messages if a nonce is reused in CPA-secure encryption. |
+| **CCA Bitflip Attack** | `/pa06/bitflip` | Demonstrates that flipping a ciphertext bit in CPA-only mode corrupts the plaintext silently, whereas CCA strictly rejects it. |
+| **MAC Tampering** | `/pa05/tamper_test` | Shows how flipping message or tag bits causes immediate MAC verification failure. |
+| **DH Man-in-the-Middle** | `/pa11/mitm` | Simulates an adversary intercepting a Diffie-Hellman exchange to establish separate shared keys with Alice and Bob. |
+| **RSA Determinism** | `/pa12/determinism` | Compares textbook RSA (identical ciphertexts) against PKCS#1 v1.5 randomized padding. |
+| **Signature Forgery** | `/pa15/forgery` | Exploits multiplicative homomorphism to forge a signature without a private key: `σ(m1 * m2) = σ(m1) * σ(m2)`. |
+| **ElGamal Malleability** | `/pa16/malleability` | Multiplies the ciphertext by a scalar, showing that decryption yields a scaled plaintext. |
+| **CCA-PKC vs ElGamal** | `/pa17/contrast` | Side-by-side contrast proving plain ElGamal is malleable, while CCA-PKC (with RSA signatures) detects and rejects tampering. |
 
 ---
 
-## PA#20: Full Call-Stack Trace
+## 🌐 Backend API Endpoints
 
-One AND gate evaluation in PA#20 traces through the entire project:
-
-```
-PA#20 Secure_Eval(circuit, x_Alice, y_Bob, group)
-└── gate.type == 'AND':
-    └── PA#19 Secure_AND(group, a, b)
-        ├── PA#18 OT_Receiver_Step1(group, b)
-        │   └── PA#11 DHGroup.random_exponent()
-        │       └── os.urandom() [allowed]
-        ├── PA#18 OT_Sender_Step(group, pk_0, pk_1, m0, m1)
-        │   └── PA#16 elgamal_enc((group, pk_i), m_i)
-        │       └── PA#11 DHGroup.power(g, r)
-        │           └── PA#13 _square_and_multiply(g, r, p)
-        └── PA#18 OT_Receiver_Step2(state, C_0, C_1)
-            └── PA#16 elgamal_dec((group, sk_b), c1, c2)
-                └── PA#13 _square_and_multiply(c1, sk_b, p)
-
-Group initialization (PA#11 DHGroup):
-└── PA#13 gen_safe_prime(bits)
-    ├── PA#13 gen_prime(bits-1)  [Miller-Rabin loop]
-    │   └── PA#13 miller_rabin(candidate, k=40)
-    │       └── PA#13 _square_and_multiply(a, d, n)
-    └── PA#13 miller_rabin(p=2q+1, k=40)
-```
-
----
-
-## Bidirectional Reductions
-
-### PA#1 — OWF ↔ PRG
-- **OWF → PRG**: HILL construction. For seed s, iterate f repeatedly, extract Goldreich-Levin hard-core bit per step.
-- **PRG → OWF**: Define f_G(s) = G(s). Inverting G recovers s (PRG seed), which is hard by PRG security.
-
-### PA#2 — PRG ↔ PRF
-- **PRG → PRF**: GGM binary tree. Parse input x = b₁...bₙ, walk tree applying G_{b_i} at each level.
-- **PRF → PRG**: G(s) = F_s(0ⁿ) ∥ F_s(1ⁿ). Security reduces to PRF security.
-
-### PA#10 — CRHF ↔ HMAC ↔ MAC (6 directions)
-- **CRHF → HMAC**: HMAC construction using CRHF as underlying hash.
-- **HMAC → CRHF**: Use HMAC_k(cv ∥ block) as compression function in MD framework.
-- **HMAC → MAC**: HMAC satisfies EUF-CMA (proven from CRHF security).
-- **MAC → CRHF**: A secure MAC serves as collision-resistant compression.
-- **CRHF → MAC**: Via HMAC bridge.
-- **MAC → HMAC**: Mac forgery implies HMAC forgery.
-
----
-
-## Allowed Library Exceptions (per spec)
-
-1. `int` — Python's arbitrary-precision integers
-2. `os.urandom` — cryptographically secure randomness
-3. `pow(a, b, n)` — Python's built-in modular exponentiation (only where noted; own `_square_and_multiply` also implemented for benchmarks)
-
-All other cryptographic operations are implemented from scratch.
-
----
-
-## Backend API Endpoints
-
-### Infrastructure
+The FastAPI backend exposes over 50 HTTP endpoints. To keep this documentation clean, the API routes are categorized and collapsed below.
 
 | Endpoint | Method | Description |
-|---|---|---|
-| `/` | GET | Root health check |
-| `/health` | GET | API health status |
-| `/shutdown` | POST | Graceful server shutdown |
-
-### PA#1 — OWF & PRG
-
-| Endpoint | Method | Description |
-|---|---|---|
-| `/pa01/owf` | POST | Evaluate DLP-based one-way function f(x) = g^x mod p |
+| --- | --- | --- |
+| `/` | GET | Root health status |
+| `/health` | GET | API health check |
+| `/pa01/owf` | POST | Evaluate DLP-based one-way function `f(x) = g^x mod p` |
 | `/pa01/prg` | POST | Generate pseudorandom bits from OWF-PRG (HILL construction) |
 | `/pa01/randomness_test` | POST | Run NIST statistical tests on PRG output |
-
-### PA#2 — PRF (GGM)
-
-| Endpoint | Method | Description |
-|---|---|---|
-| `/pa02/prf` | POST | Evaluate AES-based PRF: F(k, x) |
+| `/pa02/prf` | POST | Evaluate AES-based PRF: `F(k, x)` |
 | `/pa02/ggm_tree` | POST | Build full GGM binary tree and highlight query path |
-
-### PA#3 — CPA Encryption
-
-| Endpoint | Method | Description |
-|---|---|---|
 | `/pa03/encrypt` | POST | CPA-secure encryption |
 | `/pa03/decrypt` | POST | CPA-secure decryption |
-| `/pa03/cpa_challenge` | POST | IND-CPA challenge game (with optional nonce-reuse demo) |
-
-### PA#4 — Block Cipher Modes
-
-| Endpoint | Method | Description |
-|---|---|---|
-| `/pa04/encrypt` | POST | Encrypt with mode (CBC / OFB / CTR) |
-| `/pa04/decrypt` | POST | Encrypt + decrypt round-trip |
-| `/pa04/ecb_demo` | POST | ECB determinism demo — same block → identical ciphertext vs. CBC/CTR |
-
-### PA#5 — MACs
-
-| Endpoint | Method | Description |
-|---|---|---|
-| `/pa05/mac` | POST | Compute PRF-MAC or CBC-MAC tag |
-| `/pa05/verify` | POST | Verify a MAC tag |
-| `/pa05/tamper_test` | POST | Tamper detection demo — flip message/tag bits and verify |
-
-### PA#6 — CCA Encryption
-
-| Endpoint | Method | Description |
-|---|---|---|
+| `/pa03/cpa_challenge` | POST | IND-CPA indistinguishability game |
+| `/pa04/encrypt` | POST | Encrypt with mode (ECB / CBC / OFB / CTR) |
+| `/pa04/decrypt` | POST | Decrypt with mode (ECB / CBC / OFB / CTR) |
+| `/pa04/ecb_demo` | POST | Demonstrate ECB determinism vulnerability |
+| `/pa05/mac` | POST | Compute MAC (PRF-MAC or CBC-MAC) |
+| `/pa05/verify` | POST | Verify MAC tag |
+| `/pa05/tamper_test` | POST | Demonstrate MAC tampering detection |
 | `/pa06/encrypt` | POST | Encrypt-then-MAC (CCA-secure) |
-| `/pa06/bitflip` | POST | Bitflip attack demo — CPA ciphertext corrupts silently, CCA rejects |
-
-### PA#7 — Merkle-Damgård
+| `/pa06/bitflip` | POST | Compare CPA vs CCA bitflip attack |
 
 | Endpoint | Method | Description |
-|---|---|---|
+| --- | --- | --- |
 | `/pa07/hash` | POST | Compute Merkle-Damgård toy hash |
-| `/pa07/chain` | POST | Full chain visualization — blocks, chaining values, padding |
-
-### PA#8 — DLP-CRHF
-
-| Endpoint | Method | Description |
-|---|---|---|
-| `/pa08/hash` | POST | DLP-based collision-resistant hash |
-
-### PA#9 — Birthday Attack
-
-| Endpoint | Method | Description |
-|---|---|---|
-| `/pa09/birthday` | POST | Run birthday attack to find hash collision |
-| `/pa09/birthday_curve` | POST | Birthday paradox curve — attempts vs. bit-size across multiple trials |
-
-### PA#10 — HMAC
-
-| Endpoint | Method | Description |
-|---|---|---|
+| `/pa07/chain` | POST | Visualize full Merkle-Damgård chain with intermediate CVs |
+| `/pa08/hash` | POST | DLP-based collision-resistant hash (CRHF) |
+| `/pa09/birthday` | POST | Run birthday attack and find hash collisions |
+| `/pa09/birthday_curve` | POST | Generate birthday paradox probability curves |
 | `/pa10/hmac` | POST | Compute HMAC tag |
 | `/pa10/hmac_verify` | POST | Verify HMAC tag |
-
-### PA#11 — Diffie-Hellman
-
-| Endpoint | Method | Description |
-|---|---|---|
-| `/pa11/dh_exchange` | GET | Full DH key exchange demo (summary) |
-| `/pa11/dh_interactive` | GET | Detailed DH exchange — all parameters, private/public keys, shared secret |
-| `/pa11/mitm` | POST | Man-in-the-Middle attack simulation — Eve intercepts and creates separate shared keys |
-
-### PA#12 — RSA
-
-| Endpoint | Method | Description |
-|---|---|---|
-| `/pa12/keygen` | GET | RSA key generation info |
-| `/pa12/encrypt` | POST | RSA encrypt + decrypt round-trip |
-| `/pa12/determinism` | POST | Textbook RSA determinism vs. PKCS#1 v1.5 randomized padding |
-
-### PA#13 — Miller-Rabin
-
-| Endpoint | Method | Description |
-|---|---|---|
+| `/pa11/dh_exchange` | GET | Run DH exchange (Alice, Bob, shared secret) |
+| `/pa11/dh_interactive` | GET | Full DH parameters and group details |
+| `/pa11/mitm` | POST | Demonstrate Man-in-the-Middle attack on DH |
+| `/pa12/keygen` | GET | Generate new RSA keypair |
+| `/pa12/encrypt` | POST | RSA encrypt and decrypt round-trip |
+| `/pa12/determinism` | POST | Compare textbook vs PKCS#1 v1.5 randomization |
 | `/pa13/is_prime` | POST | Miller-Rabin primality test |
-| `/pa13/miller_rabin_rounds` | POST | Round-by-round Miller-Rabin trace |
-| `/pa13/carmichael_demo` | GET | Carmichael number detection (561, 1105, 1729, …) |
-
-### PA#14 — CRT & Håstad
-
-| Endpoint | Method | Description |
-|---|---|---|
+| `/pa13/miller_rabin_rounds` | POST | Miller-Rabin test with per-round trace |
+| `/pa13/carmichael_demo` | GET | Test Carmichael numbers (561, 1105, 1729, ...) |
 | `/pa14/crt` | POST | Chinese Remainder Theorem solver |
-| `/pa14/hastad` | POST | Håstad broadcast attack — recover m from 3 RSA ciphertexts (e=3) |
-
-### PA#15 — Digital Signatures
-
-| Endpoint | Method | Description |
-|---|---|---|
-| `/pa15/sign` | POST | RSA signature with hash + full verification trace |
-| `/pa15/verify` | POST | Signature verification + tamper detection |
-| `/pa15/forgery` | POST | Multiplicative homomorphism forgery demo: σ(m₁·m₂) = σ(m₁)·σ(m₂) |
-
-### PA#16 — ElGamal
+| `/pa14/hastad` | POST | Håstad broadcast attack (RSA with e=3) |
+| `/pa15/sign` | POST | RSA digital signature |
+| `/pa15/verify` | POST | RSA signature verification (with tampering demo) |
+| `/pa15/forgery` | POST | Demonstrate multiplicative forgery on raw RSA |
+| `/pa16/encrypt` | POST | ElGamal encryption and decryption |
+| `/pa16/malleability` | POST | Demonstrate ElGamal malleability attack |
+| `/pa16/malleability_batch` | POST | Run malleability attack across trials |
+| `/pa17/encrypt` | POST | CCA-secure PKC (ElGamal + RSA signature) |
+| `/pa17/contrast` | POST | Compare plain ElGamal (malleable) vs CCA-PKC (tamper-evident) |
 
 | Endpoint | Method | Description |
-|---|---|---|
-| `/pa16/encrypt` | POST | ElGamal encryption + decryption |
-| `/pa16/malleability` | POST | Malleability demo — multiply c₂ by 2, decryption yields 2m |
-| `/pa16/malleability_batch` | POST | Batch malleability verification across multiple trials |
-
-### PA#17 — CCA-PKC
-
-| Endpoint | Method | Description |
-|---|---|---|
-| `/pa17/encrypt` | POST | CCA-secure PKC (ElGamal + RSA signature) — tamper → rejection |
-| `/pa17/contrast` | POST | Side-by-side: plain ElGamal (malleable) vs. CCA-PKC (tamper-proof) |
-
-### PA#18 — Oblivious Transfer
-
-| Endpoint | Method | Description |
-|---|---|---|
-| `/pa18/ot` | POST | 1-out-of-2 OT protocol — receiver gets m_b without learning m_{1-b} |
-
-### PA#19 — Secure Gates
-
-| Endpoint | Method | Description |
-|---|---|---|
-| `/pa19/secure_and` | POST | Secure AND gate (via OT) |
+| --- | --- | --- |
+| `/pa18/ot` | POST | 1-out-of-2 OT protocol: receiver privacy & sender privacy |
+| `/pa19/secure_and` | POST | Secure AND gate (via OT + DH) |
 | `/pa19/secure_xor` | POST | Secure XOR gate (additive sharing) |
-| `/pa19/truth_table` | POST | Full truth table for AND, XOR, NOT gates |
-
-### PA#20 — MPC Circuits
-
-| Endpoint | Method | Description |
-|---|---|---|
-| `/pa20/millionaires` | POST | Millionaire's problem — secure comparison |
+| `/pa19/truth_table` | GET | Truth table for AND, XOR, NOT gates |
+| `/pa20/millionaires` | POST | Millionaire's problem (secure comparison circuit) |
 | `/pa20/equality` | POST | Secure equality test |
-| `/pa20/addition` | POST | Secure binary addition with carry |
-
-### Reductions
-
-| Endpoint | Method | Description |
-|---|---|---|
-| `/reductions/{A}/{B}` | GET | Bidirectional reduction routing table (OWF↔PRG, PRG↔PRF, PRF↔MAC, CRHF↔HMAC) |
+| `/pa20/addition` | POST | Secure binary addition circuit |
+| `/reductions/{A}/{B}` | GET | Bidirectional reduction proofs (OWF ↔ PRG, PRG ↔ PRF, etc.) |
 
 ---
 
-## Security Simulation Endpoints
 
-The API includes several **"learning-by-breaking"** endpoints designed to demonstrate why insecure primitives fail:
+## 🔗 Bidirectional Reductions
 
-| Simulation | Endpoint | What It Shows |
-|---|---|---|
-| ECB Determinism | `/pa04/ecb_demo` | Same plaintext block → identical ciphertext in ECB; CBC/CTR produce different blocks |
-| CPA Nonce Reuse | `/pa03/cpa_challenge` | With `reuse_nonce: true`, attacker can distinguish messages |
-| CCA Bitflip | `/pa06/bitflip` | Flipping a ciphertext bit in CPA-only mode corrupts plaintext silently; CCA rejects |
-| MAC Tampering | `/pa05/tamper_test` | Flipping message or tag bits causes MAC verification to fail |
-| DH MITM | `/pa11/mitm` | Eve intercepts DH exchange, establishes separate keys with Alice and Bob |
-| RSA Determinism | `/pa12/determinism` | Textbook RSA produces identical ciphertexts; PKCS#1 v1.5 randomizes |
-| Signature Forgery | `/pa15/forgery` | Multiplicative homomorphism: forge σ(m₁·m₂) from σ(m₁) and σ(m₂) without private key |
-| ElGamal Malleability | `/pa16/malleability` | Multiply c₂ by scalar → decryption yields scaled plaintext |
-| CCA-PKC vs ElGamal | `/pa17/contrast` | Plain ElGamal is malleable; CCA-PKC (with RSA sig) detects and rejects tampering |
+A core focus of this project is proving the mathematical reductions between primitives.
+
+* **OWF → PRG:** Implemented via the HILL construction. For a given seed s, the system iterates a one-way function f repeatedly, extracting the Goldreich-Levin hard-core bit at each step to generate verifiable pseudorandomness.
+* **PRG → OWF:** Demonstrates that a PRG is inherently a One-Way Function by defining f_G(s) = G(s). Inverting G to recover the original PRG seed s is mathematically hard by the fundamental definition of PRG security.
+* **PRG → PRF:** Utilizes a GGM binary tree. It parses the input x = b₁ b₂ ... bₙ and traverses the tree, applying the pseudorandom generator G_b at each level to evaluate the function securely.
+* **PRF → PRG:** Expands randomness by defining G(s) = F_s(0ⁿ) ∥ F_s(1ⁿ). The pseudorandomness of the concatenated output reduces directly to the underlying security of the Pseudorandom Function.
+* **CRHF ↔ HMAC ↔ MAC:** Demonstrates a comprehensive bidirectional proof network. This includes utilizing HMAC_k(cv ∥ block) as the compression function within the Merkle-Damgård framework, and formally proving EUF-CMA (Existential Unforgeability under Chosen Message Attack) satisfaction.
 
 ---
 
-## Webapp Architecture
+## 🏗️ Deep Architectural Traces
 
-The React dashboard (`webapp/`) is organized into three page modules, each handling a group of PAs:
+```mermaid
+graph TD
+    PA13[PA#13: Miller-Rabin & Safe Primes] --> PA01
+    PA13 --> PA07
+    PA13 --> PA11
+    PA13 --> PA12
+    
+    PA01[PA#01: OWF + PRG] --> PA02[PA#02: PRF]
+    PA02 --> PA03[PA#03: CPA]
+    PA03 --> PA04[PA#04: Block Modes]
+    PA03 --> PA05[PA#05: MAC]
+    PA05 --> PA06[PA#06: CCA]
+    PA05 --> PA10
+    
+    PA07[PA#07: Merkle-Damgård] --> PA08[PA#08: DLP-CRHF]
+    PA08 --> PA09[PA#09: Birthday Attack]
+    PA08 --> PA10[PA#10: HMAC]
 
-| Module | PAs | Topics |
-|---|---|---|
-| `PA01_06.jsx` | PA#1 – PA#6 | Foundations (OWF, PRG, PRF, GGM) + Symmetric (CPA, Modes, MAC, CCA) |
-| `PA07_12.jsx` | PA#7 – PA#12 | Hash (Merkle-Damgård, DLP-CRHF, Birthday, HMAC) + Public Key (DH, RSA) |
-| `PA13_20.jsx` | PA#13 – PA#20 | Primality, CRT, Signatures, ElGamal, CCA-PKC, OT, Secure Gates, MPC |
+    PA11[PA#11: Diffie-Hellman] --> PA16[PA#16: ElGamal]
+    PA11 --> PA18[PA#18: Oblivious Transfer]
+    PA18 --> PA19[PA#19: Secure Gates]
+    PA19 --> PA20[PA#20: MPC Circuits]
+    
+    PA12[PA#12: RSA] --> PA14[PA#14: CRT + Håstad]
+    PA12 --> PA15[PA#15: Digital Signatures]
+    
+    PA15 --> PA17[PA#17: CCA-PKC]
+    PA16 --> PA17
 
-Each PA page provides:
-- Interactive input forms with hex/integer fields
-- Real-time API calls to the backend
-- Visual result panels showing cryptographic parameters
-- Security simulation widgets (where applicable)
+```
 
-Navigation uses a grouped sidebar (`Foundations → Symmetric → Hash → Public Key → Signatures & PKC → MPC`).
+One `AND` gate evaluation in PA#20 traces through the entire mathematical foundation of the project, all the way down to arbitrary-precision prime generation.
+
+```mermaid
+graph TD
+    A[PA#20: Secure_Eval circuit, x_Alice, y_Bob, group] --> B{gate.type == 'AND'}
+    B --> C[PA#19: Secure_AND group, a, b]
+    
+    C --> D[PA#18: OT_Receiver_Step1 group, b]
+    D --> E[PA#11: DHGroup.random_exponent]
+    E --> F[os.urandom]
+    
+    C --> G[PA#18: OT_Sender_Step group, pk_0, pk_1, m0, m1]
+    G --> H[PA#16: elgamal_enc]
+    H --> I[PA#11: DHGroup.power g, r]
+    I --> J[PA#13: _square_and_multiply g, r, p]
+    
+    C --> K[PA#18: OT_Receiver_Step2 state, C_0, C_1]
+    K --> L[PA#16: elgamal_dec]
+    L --> M[PA#13: _square_and_multiply c1, sk_b, p]
+    
+    Z[Group Initialization] -.-> N[PA#13: gen_safe_prime]
+    N --> O[PA#13: gen_prime]
+    O --> P[PA#13: miller_rabin candidate, k=40]
+    P --> Q[PA#13: _square_and_multiply a, d, n]
+    N --> R[PA#13: miller_rabin p=2q+1, k=40]
+
+```
 
 ---
 
-## Implementation Notes
+## 🖥️ Webapp Architecture
 
-- **AES-128**: Fully implemented from scratch (S-box, key schedule, MixColumns, ShiftRows, AddRoundKey, inverses). Verified against NIST KAT vector.
-- **Miller-Rabin**: 40 rounds, correctly identifies all tested Carmichael numbers (561, 1105, 1729, ...).
-- **Safe primes**: Both gen_safe_prime and gen_prime use own Miller-Rabin.
-- **ElGamal**: Uses PA#11 group; modular inverse via Fermat's little theorem (p prime).
-- **OT**: Receiver privacy: pk_{1-b} is a random group element with no known dlog. Sender privacy: receiver cannot decrypt C_{1-b} without sk_{1-b}.
-- **MPC circuits**: Topologically ordered DAG; AND gates use OT (PA#18), XOR uses additive sharing, NOT is local. Supports comparison, equality, and addition circuits.
-- **Lazy-loaded singletons**: The backend caches expensive objects (AES PRF, DH group, RSA keypair, ElGamal keypair, DLP hash, RSA signature) to avoid regeneration on each request.
+The React dashboard (`webapp/`) acts as the interactive visualizer. It is organized into three specific page modules that handle real-time API calls and registry metadata:
+
+| React Component | Programming Assignments | Topics Covered |
+| --- | --- | --- |
+| `PA01_06.jsx` | PA#01 - PA#06 | Foundations (OWF, PRG, PRF, GGM) and Symmetric Crypto (CPA, Modes, MAC, CCA) |
+| `PA07_12.jsx` | PA#07 - PA#12 | Hashing (Merkle-Damgård, DLP-CRHF, Birthday, HMAC) and Public Key (DH, RSA) |
+| `PA13_20.jsx` | PA#13 - PA#20 | Primality, CRT, Signatures, ElGamal, CCA-PKC, OT, Secure Gates, and MPC |
+
+---
+
+## 📜 Implementation Notes & Allowed Exceptions
+
+### Cryptographic Implementations
+
+* **AES-128:** Fully implemented from scratch (including S-box, key schedule, MixColumns, ShiftRows, AddRoundKey, and inverses). Verified against NIST KAT vectors.
+* **Miller-Rabin:** Utilizes 40 rounds and correctly identifies all tested Carmichael numbers (e.g., 561, 1105, 1729).
+* **Oblivious Transfer (OT):** Receiver privacy ensures `pk_{1-b}` is a random group element with no known dlog. Sender privacy ensures the receiver cannot decrypt `C_{1-b}` without `sk_{1-b}`.
+* **MPC Circuits:** Implemented as a topologically ordered DAG. AND gates use OT (PA#18), XOR uses additive sharing, and NOT is resolved locally.
+
+### Allowed Library Exceptions (Per Specification)
+
+To strictly adhere to the project spec, the following standard libraries are the **only** exceptions utilized to build the primitives:
+
+1. `int` : Python's arbitrary-precision integers.
+2. `os.urandom` : Used strictly for cryptographically secure randomness.
+3. `pow(a, b, n)` : Python's built-in modular exponentiation.
+4. Additional standard library modules for non-cryptographic operations: `struct` (binary packing), `math` (NIST tests), `time` (benchmarking), `threading` (API management).
+
+Note: A custom `_square_and_multiply` function is also implemented in PA#13 for demonstration and educational benchmarking purposes, but the built-in `pow` is used in production code.
